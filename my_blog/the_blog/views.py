@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.views.generic import ListView, DetailView, TemplateView, CreateView
 from .models import BlogPost
 from django.shortcuts import get_object_or_404
+from .forms import PostForm
 
 class HomeView(TemplateView):
     template_name = 'home.html'
@@ -33,5 +34,6 @@ class DailyDetailView(DetailView):
     
 class AddPostView(CreateView):
     model = BlogPost
+    form_class = PostForm
     template_name = "add_post.html"
-    fields = '__all__'
+    #fields = '__all__'

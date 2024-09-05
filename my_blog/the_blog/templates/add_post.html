@@ -6,31 +6,25 @@
 
 {% block content %}
 
-<!-- align to the center of the screen-->
-<div style="text-align: center;">
+<h1> Create Blog Post </h1>
+</br></br>
 
-    <h1> Create Blog Post </h1>
+<div class="form-group">
+    <form method = "POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn btn-success">POST</button>
 
-    </br>
-    </br>
-
-<form method = "POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button class="btn btn-success">POST</button>
-
-    <!-- Back button with conditional URL -->
-    {% if request.GET.source == 'daily' %}
-        <a href="{% url 'daily-blog' %}" class="btn btn-danger">Back</a>
-    {% elif request.GET.source == 'study' %}
-        <a href="{% url 'study-blog' %}" class="btn btn-danger">Back</a>
-    {% else %}
-        <!-- Default back URL -->
-        <a href="{% url 'home' %}" class="btn btn-danger">Back</a>
-    {% endif %}
-
-
-
-</div>
+        <!-- Back button with conditional URL -->
+        {% if request.GET.source == 'daily' %}
+            <a href="{% url 'daily-blog' %}" class="btn btn-danger">Back</a>
+        {% elif request.GET.source == 'study' %}
+            <a href="{% url 'study-blog' %}" class="btn btn-danger">Back</a>
+        {% else %}
+            <!-- Default back URL -->
+            <a href="{% url 'home' %}" class="btn btn-danger">Back</a>
+        {% endif %}
+    
+    </div>
 
 {% endblock %}
