@@ -1,0 +1,40 @@
+{% extends 'base.html'%}
+
+{% block title %}
+    Allie's Study Blog
+{% endblock %}
+
+
+{% block content %}
+
+<h1> My Study Blog </h1>
+<hr>
+<div class="btn-group float-end " role="group" aria-label="Basic outlined example">
+    <button type="button" class="btn btn-outline-primary border-danger text-success" id="post-button">POST</button>
+    <button type="button" class="btn btn-outline-primary border-warning text-danger">EDIT</button>
+    <button type="button" class="btn btn-outline-primary border-info text-primary">DELETE</button>
+  </div>
+<br/>
+<br/>
+<ul>
+    {% for post in object_list %}
+        {% if post.category == 'study' %}
+            <li>
+                <a href="{% url 'studyblog-article-detail' post.pk %}">
+                    {{ post.title }}
+                </a>
+                By {{ post.author.first_name }} {{ post.author.last_name }} || ( {{ post.date|date:"Y-m-d" }} )
+            </li>
+            <br/>  <!-- Blank line between posts -->
+        {% endif %}
+    {% endfor %}
+</ul>
+
+
+<script>
+    document.getElementById('post-button').addEventListener('click', function() {
+        window.location.href = "{% url 'add_post' %}?source=study";
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'base.html'%}
+
+
+
+{% block title %}
+    Allie's {{post.category}} blog - {{post.pk}}
+{% endblock %}
+
+
+
+{% block content %}
+
+<h1>{{post.title}}</h1>
+<small>
+    By {{ post.author.first_name }} {{ post.author.last_name }}
+    Posted on {{post.date|date:"Y-m-d"}}
+</small>
+<hr>
+<br/>
+{{post.body}}
+<br/>
+<br/>
+
+<!-- Create 'Back to home page' button -->
+<hr>
+<a href="{% url 'study-blog' %}" class="btn btn-danger"> Back</a>
+
+{% endblock %}
