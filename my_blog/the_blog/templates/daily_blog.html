@@ -1,38 +1,64 @@
-{% extends 'base.html'%}
+{% extends 'base.html' %}
 
 {% block title %}
     Allie's Daily Blog
 {% endblock %}
 
-
 {% block content %}
 
-<h1> My Daily Blog </h1>
+<h1 class="text-center">My Daily Blog</h1>
 <hr>
-<div class="btn-group float-end " role="group" aria-label="Basic outlined example">
-    <button type="button" class="btn btn-outline-primary border-danger text-success" id="post-button">POST</button>
-    <button type="button" class="btn btn-outline-primary border-warning text-danger">EDIT</button>
-    <button type="button" class="btn btn-outline-primary border-info text-primary">DELETE</button>
-  </div>
-<br/>
-<br/>
-<ul>
-    {% for post in object_list %}
-        {% if post.category == 'daily' %}
-            <li>
-                <a href="{% url 'dailyblog-article-detail' post.pk %}">
-                    {{ post.title }}
-                </a>
-                By {{ post.author.first_name }} {{ post.author.last_name }} || ( {{ post.date|date:"Y-m-d" }} )
-            </li>
-            <br/>  <!-- Blank line between posts -->
-        {% endif %}
-    {% endfor %}
-</ul>
+
+{% if object_list %}
+
+    <form id="posts-form" method="POST" action="{% url 'delete_posts' %}">
+        {% csrf_token %}
+
+        <input type="hidden" name="source" value="daily">
+
+        <div class="btn-group float-end" role="group" aria-label="Basic outlined example">
+            <button type="button" class="btn btn-outline-primary border-danger text-success" id="post-button">POST</button>
+            <button type="button" class="btn btn-outline-primary border-info text-primary" id="delete-button">DELETE</button>
+        </div>
+        <br/><br/>
+
+        <ul style="list-style-type: none; padding-left: 0;">
+            {% for post in object_list %}
+                {% if post.category == 'daily' %}
+                    <li>
+                        <input type="checkbox" name="posts" value="{{ post.pk }}" id="post-{{ post.pk }}" style="margin-right: 10px;">
+                        <label for="post-{{ post.pk }}">
+                            <a href="{% url 'dailyblog-article-detail' post.pk %}" style="margin-right: 80px;">
+                                {{ post.title }}
+                            </a>
+                            By {{ post.author.first_name }} {{ post.author.last_name }} || ( {{ post.post_date }} )
+                        </label>
+                    </li>
+                    <br/>  <!-- Blank line between posts -->
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </form>
+{% else %}
+    <p>No posts available. <a href="{% url 'add_post' %}?source=daily">Add a new post</a></p>
+{% endif %}
 
 <script>
     document.getElementById('post-button').addEventListener('click', function() {
         window.location.href = "{% url 'add_post' %}?source=daily";
+    });
+
+    document.getElementById('delete-button').addEventListener('click', function() {
+        // Check if at least one checkbox is selected
+        var checkboxes = document.querySelectorAll('input[name="posts"]:checked');
+        if (checkboxes.length === 0) {
+            alert('Please select at least one post to delete.');
+        } else {
+            // Show confirmation dialog if at least one checkbox is selected
+            if (confirm('Are you sure you want to delete the selected posts?')) {
+                document.getElementById('posts-form').submit();
+            }
+        }
     });
 </script>
 
