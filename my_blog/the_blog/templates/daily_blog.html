@@ -10,29 +10,37 @@
 <hr>
 
 {% if object_list %}
-
-    <form id="posts-form" method="POST" action="{% url 'delete_posts' %}">
         {% csrf_token %}
-
         <input type="hidden" name="source" value="daily">
 
-        <div class="btn-group float-end" role="group" aria-label="Basic outlined example">
-            <button type="button" class="btn btn-outline-primary border-danger text-success" id="post-button">POST</button>
-            <button type="button" class="btn btn-outline-primary border-info text-primary" id="delete-button">DELETE</button>
-        </div>
+        {% if user.is_authenticated %}
+            <div class="btn-group float-end" role="group" aria-label="Basic outlined example">
+                <button type="button" class="btn btn-outline-primary border-danger text-success" id="post-button">POST</button>
+            </div>
+        {% endif %}
+        
         <br/><br/>
 
         <ul style="list-style-type: none; padding-left: 0;">
             {% for post in object_list %}
                 {% if post.category == 'daily' %}
                     <li>
-                        <input type="checkbox" name="posts" value="{{ post.pk }}" id="post-{{ post.pk }}" style="margin-right: 10px;">
                         <label for="post-{{ post.pk }}">
                             <a href="{% url 'dailyblog-article-detail' post.pk %}" style="margin-right: 80px;">
                                 {{ post.title }}
                             </a>
                             By {{ post.author.first_name }} {{ post.author.last_name }} || ( {{ post.post_date }} )
                         </label>
+
+                        <!-- If the logged-in user is the post's author, show the DELETE button -->
+                        {% if post.author.username == user.username or user.is_staff  %}
+                            <form action="{% url 'delete_post' post.pk %}" method="post" style="display: inline;" onsubmit="return confirmDelete();">
+                                {% csrf_token %}
+                                <input type="hidden" name="source" value="daily">
+                                <button type="submit" class="btn btn-sm text-primary">DELETE</button>
+                            </form>
+                        {% endif %}
+
                     </li>
                     <br/>  <!-- Blank line between posts -->
                 {% endif %}
@@ -48,18 +56,9 @@
         window.location.href = "{% url 'add_post' %}?source=daily";
     });
 
-    document.getElementById('delete-button').addEventListener('click', function() {
-        // Check if at least one checkbox is selected
-        var checkboxes = document.querySelectorAll('input[name="posts"]:checked');
-        if (checkboxes.length === 0) {
-            alert('Please select at least one post to delete.');
-        } else {
-            // Show confirmation dialog if at least one checkbox is selected
-            if (confirm('Are you sure you want to delete the selected posts?')) {
-                document.getElementById('posts-form').submit();
-            }
-        }
-    });
+    function confirmDelete() {
+        return confirm('Are you sure you want to delete this post?');
+    }
 </script>
 
 {% endblock %}

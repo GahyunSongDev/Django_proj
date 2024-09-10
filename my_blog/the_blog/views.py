@@ -5,6 +5,7 @@ from .models import BlogPost
 from .forms import EditForm, PostForm
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView, TemplateView, CreateView, UpdateView, View
+from django.contrib.auth.decorators import login_required
 
 
 class HomeView(TemplateView):
@@ -41,6 +42,12 @@ class AddPostView(CreateView):
     model = BlogPost
     form_class = PostForm
     template_name = "add_post.html"
+
+    def form_valid(self, form):
+        # Automatically set the author to the logged-in user
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
 
     def get_success_url(self):
         # Handle redirection based on the source parameter
@@ -88,15 +95,27 @@ class DeletePostsView(View):
         else:
             return redirect('study-blog')
         
+
 class DeletePostView(View):
     def post(self, request, *args, **kwargs):
+        # Get the post ID from the URL kwargs
         post_id = self.kwargs['pk']
-        post = BlogPost.objects.get(pk=post_id)
-        category = request.POST.get('source', 'home')
+        
+        # Retrieve the post object
+        post = get_object_or_404(BlogPost, pk=post_id)
+        
+        # Delete the post
         post.delete()
-        if category == 'daily':
+        
+        # Determine the redirect URL based on the post's category or source
+        source = request.POST.get('source', 'home')
+        if source == 'daily':
             return redirect('daily-blog')
-        elif category == 'study':
+        elif source == 'study':
             return redirect('study-blog')
         else:
             return redirect('home')
+        
+
+class ContactsView(TemplateView):
+    template_name = 'contacts.html'

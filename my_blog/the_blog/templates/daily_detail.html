@@ -16,24 +16,25 @@
 
     <small>
         By {{ post.author.first_name }} {{ post.author.last_name }}
-        Posted on {{ post.date|date:"Y-m-d" }}
+        Posted on {{ post.post_date }}
     </small>
 
     <!-- Buttons placed on the right side of the screen -->
     <div class="d-flex align-items-center">
-        <!-- Edit Button -->
-        {% if post.category == 'study' %}
-            <a href="{% url 'study_update_post' post.pk %}?source=study" class="btn btn-outline-secondary btn-sm me-2">EDIT</a>
-        {% elif post.category == 'daily' %}
-            <a href="{% url 'daily_update_post' post.pk %}?source=daily" class="btn btn-outline-secondary btn-sm me-2">EDIT</a>
-        {% endif %}
+        {% if post.author.username == user.username or user.is_staff %}
+            <!-- Edit Button -->
+            {% if post.category == 'study' %}
+                <a href="{% url 'study_update_post' post.pk %}?source=study" class="btn btn-outline-secondary btn-sm me-2">EDIT</a>
+            {% elif post.category == 'daily' %}
+                <a href="{% url 'daily_update_post' post.pk %}?source=daily" class="btn btn-outline-secondary btn-sm me-2">EDIT</a>
+            {% endif %}
         
-        <!-- Delete Button -->
-        <form action="{% url 'delete_post' post.pk %}" method="post" style="display: inline;">
-            {% csrf_token %}
-            <input type="hidden" name="source" value="{{ post.category }}">
-            <button type="submit" class="btn btn-outline-primary border-info text-primary btn-sm">DELETE</button>
-        </form>
+            <form action="{% url 'delete_post' post.pk %}" method="post" style="display: inline;" onsubmit="return confirmDelete();">
+                {% csrf_token %}
+                <input type="hidden" name="source" value="daily">
+                <button type="submit" class="btn btn-outline-primary border-info text-primary btn-sm">DELETE</button>
+            </form>
+        {% endif %}
     </div>
 </div>
 

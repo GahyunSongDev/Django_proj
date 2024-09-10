@@ -16,38 +16,68 @@
     
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
-          <a class="navbar-brand" href="{% url 'home' %}">Allie's Backyard</a>
+         
+            <a class="navbar-brand" href="{% url 'home' %}">Allie's Backyard</a>
+         
           <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
+         
           <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+            
             <div class="offcanvas-header">
               <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Backyard</h5>
               <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
+
             <div class="offcanvas-body">
-              <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                <li class="nav-item">
-                    <!-- linkedIn, insta, youtube-->
-                  <a class="nav-link" href="#">Contact</a>
-                </li>
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    More about me
-                  </a>
-                  <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="{% url 'study-blog' %}">Study Bolg</a></li>
-                    <li><a class="dropdown-item" href="{% url 'daily-blog' %}">Daily Bolg</a></li>
-                    <li>
-                      <hr class="dropdown-divider">
+             
+                <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Hello, 
+                            {% if user.is_authenticated %}
+                                {{ user.first_name}}
+                            {% else %}
+                                Guest
+                            {% endif %}
+                        </a>
+                        <ul class="dropdown-menu">
+                            {% if user.is_authenticated %}
+                                <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="dropdown-item">Logout</button>
+                                </form>
+                            {% else %}
+                                <li><a class="dropdown-item" href="{% url 'register' %}">Signup</a></li>
+                                <li><a class="dropdown-item" href="{% url 'login' %}">LogIn</a></li>
+                            {% endif %}
+                        </ul>
                     </li>
-                    <!-- resume click하면 pdf파일 다운받게 할꺼야-->
-                    <li><a class="dropdown-item" href="#">Resume</a></li>
-                    <li><a class="dropdown-item" href="#">Github</a></li>
-                    <li><a class="dropdown-item" href="#">T-story Blog</a></li>
-                  </ul>
-                </li>
-              </ul>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            More about me
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'study-blog' %}">Study Bolg</a></li>
+                            <li><a class="dropdown-item" href="{% url 'daily-blog' %}">Daily Bolg</a></li>
+                            <li>
+                            <hr class="dropdown-divider">
+                            </li>
+                            <li><a href="#" class="dropdown-item" onclick="downloadResume(event)">Resume</a></li>
+                            <li><a class="dropdown-item" href="https://github.com/GahyunSongDev" target="_blank" rel="noopener noreferrer">Github</a></li>
+                            <li><a class="dropdown-item" href="https://allie-backyard.tistory.com/" target="_blank" rel="noopener noreferrer">T-story Blog</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item">
+                    <!-- linkedIn, insta, youtube-->
+                    <a class="nav-link" href="{% url 'contacts' %}">Contacts</a>
+                    </li>
+
+                </ul>
               
             </div>
           </div>
@@ -59,8 +89,23 @@
 
     {% endblock %}
    </div>
+   
+   <!-- Download my Resume -->
+    <script>
+        function downloadResume(event) {
+            event.preventDefault(); // Prevent the default link behavior
 
+            // Show a confirmation message
+            var userConfirmed = confirm("Do you want to download my resume?");
 
+            if (userConfirmed) {
+                var link = document.createElement('a');
+                link.href = '/files/Gahyun-Final-Resume_repli.pdf'; 
+                link.download = 'Gahyun-Final-Resume_repli.pdf'; 
+                link.click();
+            }
+        }
+    </script>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>

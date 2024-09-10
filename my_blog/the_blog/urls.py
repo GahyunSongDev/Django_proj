@@ -7,8 +7,8 @@ from .views import (
     DailyDetailView,
     AddPostView,
     UpdatePostView,
-    DeletePostsView,
-    DeletePostView
+    DeletePostView,
+    ContactsView,
 )
 
 urlpatterns = [
@@ -32,9 +32,9 @@ urlpatterns = [
     # url for the create post view
     path('add_post/', AddPostView.as_view(), name='add_post',),
 
-    #url for deleting the post view
-    path('delete_posts/', DeletePostsView.as_view(), name='delete_posts'),
+    # url for deleting the post
+    path('post/delete/<int:pk>/', DeletePostView.as_view(), name='delete_post'),
 
-    #url for deleting the specific post 
-    path('delete_post/<int:pk>/', DeletePostView.as_view(), name='delete_post'),
+    # url for the contacts page
+    path('contacts/', ContactsView.as_view(), name='contacts'),
 ]   
