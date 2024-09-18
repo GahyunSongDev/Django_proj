@@ -14,8 +14,9 @@
     <input type="hidden" name="source" value="study">
 
     {% if user.is_authenticated %}
-        <div class="btn-group float-end" role="group" aria-label="Basic outlined example">
-            <button type="button" class="btn btn-outline-primary border-danger text-success" id="post-button">POST</button>
+        <div class="text-end">
+            <button type="button" class="btn" id="post-button" 
+                style="border: 2px solid rgb(25, 135, 84); color: black; font-weight: bold;">POST</button>
         </div>
     {% endif %}
 
@@ -26,18 +27,19 @@
             {% if post.category == 'study' %}
                 <li>
                     <label for="post-{{ post.pk }}">
-                        <a href="{% url 'studyblog-article-detail' post.pk %}" style="margin-right: 80px;">
+                        <a href="{% url 'studyblog-article-detail' post.pk %}" style="margin-right: 80px; color: black;">
                             {{ post.title }}
                         </a>
-                        By {{ post.author.first_name }} {{ post.author.last_name }} || ( {{ post.post_date }} )
-                    </label>
+                        <span style="color: gray;">
+                            By {{ post.author.first_name }} {{ post.author.last_name }} || ( {{ post.post_date }} )
+                        </span>                     </label>
 
                     <!-- If the logged-in user is the post's author, show the DELETE button -->
                     {% if post.author.username == user.username or user.is_staff  %}
                         <form action="{% url 'delete_post' post.pk %}" method="post" style="display: inline;" onsubmit="return confirmDelete();">
                             {% csrf_token %}
                             <input type="hidden" name="source" value="study">
-                            <button type="submit" class="btn btn-sm text-primary">DELETE</button>
+                            <button type="submit" class="btn btn-sm" style="color: red;">DELETE</button>
                         </form>
                     {% endif %}
                     

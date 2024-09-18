@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from django.db.models import Max
 from django.utils import timezone
-
+from ckeditor.fields import RichTextField
 
 class BlogPostManager(models.Manager):
     def get_next_id(self):
@@ -29,7 +29,8 @@ class BlogPost(models.Model):
 
     title = models.CharField(max_length=255)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    body = models.TextField()
+    body = RichTextField(blank=True, null=True)
+    #body = models.TextField()
     post_date = models.DateField(default=timezone.now)
     #ate = models.DateTimeField(auto_now_add=True)
     category = models.CharField(max_length=10, choices=CATEGORY_CHOICES)

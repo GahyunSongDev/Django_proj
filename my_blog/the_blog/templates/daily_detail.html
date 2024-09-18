@@ -15,8 +15,9 @@
 <div class="d-flex justify-content-between align-items-center">
 
     <small>
-        By {{ post.author.first_name }} {{ post.author.last_name }}
-        Posted on {{ post.post_date }}
+        <span style="color: gray;">
+            By {{ post.author.first_name }} {{ post.author.last_name }} || ( {{ post.post_date }} )
+        </span> 
     </small>
 
     <!-- Buttons placed on the right side of the screen -->
@@ -24,9 +25,11 @@
         {% if post.author.username == user.username or user.is_staff %}
             <!-- Edit Button -->
             {% if post.category == 'study' %}
-                <a href="{% url 'study_update_post' post.pk %}?source=study" class="btn btn-outline-secondary btn-sm me-2">EDIT</a>
+                <a href="{% url 'study_update_post' post.pk %}?source=study" class="btn btn-sm me-2" 
+                    style="color: rgb(25 135 84); border: solid 1px gray;">EDIT</a>
             {% elif post.category == 'daily' %}
-                <a href="{% url 'daily_update_post' post.pk %}?source=daily" class="btn btn-outline-secondary btn-sm me-2">EDIT</a>
+                <a href="{% url 'daily_update_post' post.pk %}?source=daily" class="btn btn-sm me-2"
+                    style="color: rgb(25 135 84); border: solid 1px gray;">EDIT</a>
             {% endif %}
         
             <form action="{% url 'delete_post' post.pk %}" method="post" style="display: inline;" onsubmit="return confirmDelete();">
@@ -40,12 +43,12 @@
 
 <hr>
 <br/>
-{{post.body}}
+{{post.body|safe}}
 <br/>
 <br/>
 
 <!-- Create 'Back to home page' button -->
 <hr>
-<a href="{% url 'daily-blog' %}" class="btn btn-danger"> Back</a>
+<a href="{% url 'daily-blog' %}" class="btn btn-secondary"> Back</a>
 
 {% endblock %}

@@ -5,7 +5,39 @@ from .models import BlogPost
 from .forms import EditForm, PostForm
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView, TemplateView, CreateView, UpdateView, View
-from django.contrib.auth.decorators import login_required
+
+from io import BytesIO
+from django.http import HttpResponse
+from django.template.loader import get_template
+from django.views import View
+from xhtml2pdf import pisa
+from django.http import FileResponse
+from django.conf import settings
+import os
+
+def render_to_pdf(template_src, context_dict={}):
+    template = get_template(template_src)
+    html = template.render(context_dict)
+    result = BytesIO()  # Use parentheses to instantiate BytesIO
+    pdf = pisa.pisaDocument(BytesIO(html.encode("UTF-8")), result)  # Generate the PDF
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
+    return None
+
+class ViewPDF(View):
+    def get(self, request, *arg, **kwargs):
+        pdf = render_to_pdf('the_blog/base.html')
+        return HttpResponse(pdf, content_type='application/pdf')
+    
+class DownloadPDF(View):
+    def get(self, request, *args, **kwargs):
+        # Path to the resume file
+        file_path = os.path.join(settings.BASE_DIR, 'static/files/Gahyun.pdf') 
+        
+        # Open the file and return it as a downloadable response
+        response = FileResponse(open(file_path, 'rb'), content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="resume.pdf"'
+        return response
 
 
 class HomeView(TemplateView):

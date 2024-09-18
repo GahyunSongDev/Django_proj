@@ -12,6 +12,7 @@
 <div class="form-group">
     <form method = "POST">
         {% csrf_token %}
+        {{ form.media }} 
         {{ form.as_p }}
         <button class="btn btn-success">POST</button>
 
@@ -24,7 +25,7 @@
             <!-- Default back URL -->
             <a href="{% url 'home' %}" class="btn btn-danger">Back</a>
         {% endif %}
-    
-    </div>
+    </form>
+</div>
 
 {% endblock %}
