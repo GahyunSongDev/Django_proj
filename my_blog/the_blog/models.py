@@ -28,11 +28,10 @@ class BlogPost(models.Model):
     ]
 
     title = models.CharField(max_length=255)
+    header_image = models.ImageField(null=True, blank=True, upload_to="images/")
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     body = RichTextField(blank=True, null=True)
-    #body = models.TextField()
     post_date = models.DateField(default=timezone.now)
-    #ate = models.DateTimeField(auto_now_add=True)
     category = models.CharField(max_length=10, choices=CATEGORY_CHOICES)
 
     objects = BlogPostManager()
@@ -52,3 +51,11 @@ class BlogPost(models.Model):
         if not self.pk:  # Only set ID if not already set (i.e., for new objects)
             self.pk = BlogPost.objects.get_reusable_id()
         super().save(*args, **kwargs)
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
+    bio = models.TextField()
+
+    def __str__(self):
+        return str(self.user)

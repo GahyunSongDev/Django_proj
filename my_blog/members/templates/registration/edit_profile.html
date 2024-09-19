@@ -7,13 +7,20 @@
 {% block content %}
 
 <h1> Edit Profile </h1>
+
 </br></br>
 
 <div class="form-group">
     <form method = "POST">
         {% csrf_token %}
         <h4 class="text-muted" style="font-size: 1.2rem;" > Username : {{ user.username }} !</h4>
-    </br>
+        
+        <hr>
+        <h5 class="text-muted" style="font-size: 1.1rem;" > My Bio </h5>
+        </br></br>
+        {{ user.profile.bio }}
+        <hr>
+        
         {{ form.as_p }}
         <p>If you want to reset your password, <a href="{% url 'password_change' %}">click here</a>.</p>
         <button class="btn btn-success">UPDATE</button>

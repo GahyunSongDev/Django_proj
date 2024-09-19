@@ -1,8 +1,23 @@
-{% extends 'base.html'%}
+{% extends 'base.html' %}
+
+{% load static %}
 
 {% block content %}
 
-<h1> Welcome to Allie's Backyard ! </h1>
+<div style="display: flex; justify-content: center; text-align: center; margin-bottom: 20px;">
+    <h1>Welcome to Allie's Backyard!</h1>
+</div>
 
+<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 75vh; text-align: center;">
+    
+    <div style="display: flex; align-items: center; justify-content: center;">
+        <img src="{% static 'files/me2.jpg' %}" alt="Allie's Image" style="width: 300px; height: auto; margin-right: 20px;">
+        
+        <p style="max-width: 600px;">
+            Hello! I'm Allie, a passionate developer and blogger. I love sharing my journey through coding, 
+            tech, and life experiences. Feel free to explore my blog and learn something new!
+        </p>
+    </div>
+</div>
 
 {% endblock %}

@@ -4,7 +4,7 @@ from .models import BlogPost
 class PostForm(forms.ModelForm):
     class Meta:
         model = BlogPost
-        fields = ('title', 'body', 'category')
+        fields = ('title', 'body', 'category', 'header_image')
 
         widgets = {
             'title' : forms.TextInput(attrs={'class' : 'form-control', 'placeholder' : 'Write here', 'style': 'width: 400px;'}),
