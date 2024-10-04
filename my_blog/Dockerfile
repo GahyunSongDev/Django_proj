@@ -8,6 +8,7 @@ WORKDIR /app
 #run the virtual environment creation
 RUN python3 -m venv venv /opt/virt
 
+# install everything you need before running the server
 RUN /opt/virt/bin/pip install pip --upgrade && \
     /opt/virt/bin/pip install -r requirements.txt && \
     chmod +x entrypoint.sh
